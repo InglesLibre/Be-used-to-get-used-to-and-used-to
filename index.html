@@ -12,7 +12,7 @@
         }
 
         body {
-            background: #f3faf0;   /* light green / white theme */
+            background: #f3faf0;
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             padding: 2rem 1.2rem;
             color: #1d3e1d;
@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* header & card style */
         .card {
             background: white;
             border-radius: 28px;
@@ -238,7 +237,22 @@
         }
 
         .discussion p {
-            margin: 0.5rem 0;
+            margin: 0.8rem 0;
+        }
+
+        .discussion-question {
+            font-weight: 700;
+            color: #2c6b2c;
+            margin-top: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .discussion-note {
+            background: #f2fcf0;
+            border-radius: 40px;
+            padding: 12px 18px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
         }
 
         footer {
@@ -290,16 +304,22 @@
     <!-- =============== PART 4 : DISCUSSION QUESTIONS 15–17 =============== -->
     <div class="card discussion">
         <h2>💬 follow-up discussion (questions 15–17)</h2>
-        <p><strong>15.</strong> Write a sentence about something you <strong>used to</strong> do as a child but don't do anymore.</p>
-        <p style="margin-top: 8px;"><em>➜ (share with a partner / instructor, no automatic check)</em></p>
+        
+        <div class="discussion-question">15. Discuss something you used to do as a child but don't do anymore.</div>
+        <p><em>➜ Talk with a partner or your instructor. Share memories about past habits or states that have changed.</em></p>
+        
         <hr>
-        <p><strong>16.</strong> Write a sentence about something you <strong>are used to</strong> doing every day now (university, work, or daily routine).</p>
-        <p style="margin-top: 8px;"><em>➜ (open discussion – think about habits and comfort)</em></p>
+        
+        <div class="discussion-question">16. Discuss something you are used to doing every day now (university, work, or daily routine).</div>
+        <p><em>➜ In pairs, describe habits or situations that feel normal to you now. Use “be used to + -ing”.</em></p>
+        
         <hr>
-        <p><strong>17.</strong> Write a sentence about something you had to <strong>get used to</strong> when you started a new stage of your life (e.g., a new city, a new job, a new school).</p>
-        <p style="margin-top: 8px;"><em>➜ (describe the adaptation process)</em></p>
-        <div style="margin-top: 1rem; background:#f2fcf0; border-radius: 40px; padding: 12px 18px;">
-            💡 <strong>Note:</strong> Questions 15–17 are meant for pair/group discussion or written reflection. Your instructor can review your sentences.
+        
+        <div class="discussion-question">17. Discuss something you had to get used to when you started a new stage of your life (e.g., a new city, a new job, a new school).</div>
+        <p><em>➜ Talk about a process of adaptation. What was difficult at first? How did you gradually become accustomed?</em></p>
+        
+        <div class="discussion-note">
+            💡 <strong>Note:</strong> Questions 15–17 are oral discussion prompts. No writing required. Use the target grammar: <strong>used to</strong> (past habits), <strong>be used to</strong> (current comfort), <strong>get used to</strong> (process of adaptation).
         </div>
     </div>
     <footer>🌱 light green theme · peruvian lifestyles · grammar practice (used to / be used to / get used to)</footer>
@@ -324,7 +344,7 @@
           options: ["A) The noise is no longer a problem.", "B) The person is still struggling to accept the noise.", "C) The person has always liked the noise."],
           correct: "B) The person is still struggling to accept the noise." },
         
-        // Part 2: complete the sentences (Q5 - Q11) -> fill in the blank (exact phrase matching)
+        // Part 2: complete the sentences (Q5 - Q11) -> fill in the blank
         { type: "fill", text: "When Maria first started working from home, she had to ____________ (get used to) managing her own schedule.",
           correct: "get used to", explanation: "get used to + ing" },
         { type: "fill", text: "My grandparents ____________ (be used to) waking up at dawn because they have done it for years.",
@@ -354,7 +374,6 @@
 
     let userAnswers = new Array(14).fill("");   // index 0..13
 
-    // helper: normalize for fill-in-the-blank fuzzy match (lowercase, trim spaces)
     function normalizeFill(str) {
         return str.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[’']/g, "'");
     }
@@ -363,12 +382,10 @@
         let normUser = normalizeFill(user);
         let normCorrect = normalizeFill(correctRaw);
         if (normUser === normCorrect) return true;
-        // alternative for negative contraction "aren't used to"
         if (correctRaw === "are not used to" && (normUser === "aren't used to" || normUser === "are not used to")) return true;
         return false;
     }
 
-    // render all questions dynamically
     function renderQuestions() {
         const container = document.getElementById("questionsArea");
         if (!container) return;
@@ -407,7 +424,7 @@
                 });
                 qDiv.appendChild(optsDiv);
             } 
-            else { // fill in the blank
+            else {
                 const input = document.createElement("input");
                 input.type = "text";
                 input.className = "fill-input";
@@ -429,7 +446,6 @@
         });
     }
 
-    // evaluate all 14 answers and show feedback & score
     function evaluateAnswers() {
         let correctCount = 0;
         for (let i = 0; i < questionsData.length; i++) {
@@ -442,10 +458,9 @@
                 correctAnswerStr = q.correct;
                 isCorrect = (userVal === q.correct);
             } 
-            else { // fill
+            else {
                 correctAnswerStr = q.correct;
                 isCorrect = checkFillAnswer(userVal || "", q.correct);
-                // allow extra flexibility: for Q10 negative "are not used to" we already handled inside checkFillAnswer
             }
             if (isCorrect && userVal && userVal !== "") correctCount++;
 
@@ -474,7 +489,6 @@
             userAnswers[i] = "";
             const fbDiv = document.getElementById(`fb-${i}`);
             if (fbDiv) fbDiv.innerHTML = "";
-            // reset radio / input fields
             if (questionsData[i].type === "mc") {
                 const radios = document.querySelectorAll(`input[name="q_${i}"]`);
                 radios.forEach(radio => radio.checked = false);
@@ -487,7 +501,6 @@
         if (scoreSpan) scoreSpan.innerHTML = `📊 Your score: 0 / 14`;
     }
 
-    // store user answers in localStorage (optional persistence for reload)
     function saveToLocal() {
         localStorage.setItem("peruUsedToAnswers", JSON.stringify(userAnswers));
     }
@@ -505,11 +518,9 @@
         }
     }
 
-    // attach listeners and init
     document.addEventListener("DOMContentLoaded", () => {
         loadFromLocal();
         renderQuestions();
-        // after rendering, repopulate fields from userAnswers
         for (let i = 0; i < questionsData.length; i++) {
             if (userAnswers[i]) {
                 if (questionsData[i].type === "mc") {
